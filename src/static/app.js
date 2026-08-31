@@ -1,4 +1,33 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Announcement Banner
+  const announcementBanner = document.getElementById("announcement-banner");
+  const closeAnnouncementBtn = document.getElementById("close-announcement");
+  const announcementText = document.getElementById("announcement-text");
+
+  // Close announcement banner
+  closeAnnouncementBtn.addEventListener("click", () => {
+    announcementBanner.classList.add("hidden");
+    // Store dismissal state in localStorage for 24 hours
+    const dismissTime = Date.now();
+    localStorage.setItem("announcementDismissed", dismissTime.toString());
+  });
+
+  // Check if announcement was dismissed recently (within 24 hours)
+  const dismissedTime = localStorage.getItem("announcementDismissed");
+  if (dismissedTime) {
+    const hoursSinceDismissal = (Date.now() - parseInt(dismissedTime)) / (1000 * 60 * 60);
+    if (hoursSinceDismissal < 24) {
+      announcementBanner.classList.add("hidden");
+    }
+  }
+
+  // Function to show announcement with custom message
+  window.showAnnouncement = (message) => {
+    announcementText.textContent = message;
+    announcementBanner.classList.remove("hidden");
+    localStorage.removeItem("announcementDismissed");
+  };
+
   // DOM elements
   const activitiesList = document.getElementById("activities-list");
   const messageDiv = document.getElementById("message");
